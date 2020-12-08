@@ -1,29 +1,50 @@
 // TODO: add code here
-fetch("https://handlers.education.launchcode.org/static/astronauts.json").then( (res) => {
+//sort function
+function compare( a, b, ) {
+    if ( a.hoursInSpace < b.hoursInSpace ){
+      return -1;
+    }
+    if ( a.hoursInSpace > b.hoursInSpace ){
+      return 1;
+    }
+    return 0;
+  }
+
+
+
+fetch("https://handlers.education.launchcode.org/static/astronauts.json")
+.then((res) => {
     res.json().then((json) => {
-        let container = document.getElementById("container")
-        const astronautArr = json
+        let container = document.getElementById("container");
+        let count = document.getElementById("count")
+        const astronautArr = json;
+        //sort array by hours in space
+        astronautArr.sort(compare)
+        count.innerText = `${astronautArr.length} Astronauts`
+        // astronautArr.sort()
         for (let i = 0; i < astronautArr.length; i++){
-        const currentAstronaut = astronautArr[i]
-        let skillList = currentAstronaut.skills.join(', ')
-        // for(skill in json[i].skills){
-
-        // }
-        container.innerHTML += `
-        <div class="astronaut">
-            <div class="bio">
-                <h3>${astronautArr[i].firstName} ${astronautArr[i].lastName}</h3>
-                    <ul>
-                        <li>Hours in space: ${astronautArr[i].hoursInSpace}</li>
-                        <li>Active: ${astronautArr[i].active}</li>
+            const currentAstronaut = astronautArr[i];
+            let skillList = currentAstronaut.skills.join(', ');
+        
+            container.innerHTML += `
+            <div class="astronaut">
+                <div class="bio">
+                    <h3>${currentAstronaut.firstName} ${currentAstronaut.lastName}</h3>
+                        <ul>
+                        <li>Hours in space: ${currentAstronaut.hoursInSpace}</li>
+                        <li id="active${i}">Active: ${currentAstronaut.active}</li>
                         <li>Skills: ${skillList}</li>
-                    </ul>
+                        </ul>
+                </div>
+            <img class="avatar" src="${currentAstronaut.picture}">
             </div>
-        <img class="avatar" src="${astronautArr[i].picture}">
-        </div>
-        `
-        console.log(astronautArr[i])
-
-        }
-    })
+            `
+            if (currentAstronaut.active === true){
+                const active = document.getElementById(`active${i}`)
+                active.style.color = "green"
+            }
+        };
+    });
 });
+
+
